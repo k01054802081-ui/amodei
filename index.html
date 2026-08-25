@@ -631,8 +631,30 @@
   .stat-note { margin-top: 14px; font-size: 14.5px; color: var(--ink-mid); }
   .stat-note .cite { font-size: 14px; color: var(--ink-soft); }
 
-  .notfor { margin-top: 22px; padding: 16px 20px; border-left: 2px dashed var(--blue-2); font-size: 14.5px; color: var(--ink-mid); }
-  .notfor strong { color: var(--ink); font-weight: 700; }
+  /* 경고 블록 — 브랜드 블루와 붙어 있으면 "안내"로 읽혀 무시된다.
+     의도적으로 계열을 벗어난 앰버를 쓴다. 이 페이지는 라이트 단일 테마라
+     다크 대응은 두지 않는다. 글자색은 앰버 배경 대비 AA 통과값. */
+  .warnbox {
+    margin-top: 30px; display: flex; gap: 14px; align-items: flex-start;
+    background: #FFF6E3; border: 1px solid #EBBE55; border-left: 4px solid #D99A12;
+    border-radius: 14px; padding: 20px 22px;
+  }
+  .warn-ico { width: 24px; height: 24px; flex: none; margin-top: 1px; color: #B0740F; }
+  .warn-t { font-size: 17px; font-weight: 800; letter-spacing: -.035em; color: #6B3F00; }
+  .warn-list { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 5px; }
+  .warn-list li {
+    font-size: 15.5px; color: #7A4E08; padding-left: 15px; position: relative; line-height: 1.55;
+  }
+  .warn-list li::before {
+    content: "×"; position: absolute; left: 0; top: -1px;
+    font-weight: 800; color: #B0740F;
+  }
+  .warn-list strong { font-weight: 800; color: #6B3F00; }
+  .warn-s { margin-top: 10px; font-size: 14.5px; color: #7A4E08; }
+  @media (max-width: 640px) {
+    .warnbox { padding: 17px 16px; gap: 11px; }
+    .warn-t { font-size: 16px; }
+  }
 
   .demo-wrap { position: relative; width: 100%; max-width: var(--maxw); margin: 28px auto 0; aspect-ratio: 960/700; border-radius: 20px; overflow: hidden; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-card); }
   .demo-wrap iframe { position: absolute; top: 0; left: 0; width: 960px; height: 700px; border: 0; transform-origin: 0 0; }
@@ -899,19 +921,19 @@
     <div class="wrap">
 
       <div class="toprow">
-        <span class="toptag">[<span class="nb">8월 29일(토)</span> <span class="nb">오후 3시</span> 무료 강의]</span>
+        <span class="toptag"><span class="nb">8/29(토)</span> <span class="nb">오후 3시</span> 무료 강의</span>
         <span class="dday" id="dday" hidden></span>
       </div>
       
 
-      <!-- 금지어 교체 완료(조사 기준: 02_최종세팅.md §B).
-           "하루 만에"(시간압축) · "비법 대공개"(과장)를 제거했다. AI강의 피해가
+      <!-- 금지어 없음(조사 기준: 02_최종세팅.md §B).
+           "하루 만에"(시간압축) · "비법 대공개"(과장)는 쓰지 않는다. AI강의 피해가
            11건(2024)->42건(2025)로 늘며 오염된 어휘라 40~50대에겐 역효과다.
-           대신 조사⑪ 결론을 따랐다 — 불안은 이미 최대치이므로 협박·과장이 아니라
-           "용이성 + 따라잡을 수 있는 안전한 자리"가 빈 소구점. -->
-      <h1>혼자 하면 일 년,<br>같이 하면 하루,<br><span class="hl">AI 보는 눈, 키워 드립니다</span></h1>
+           조사⑪ 결론대로 협박·과장이 아니라 "용이성 + 따라잡을 수 있는 안전한
+           자리"로 간다. 지금 h1은 왕초보 본인의 말을 그대로 따온 형태. -->
+      <h1>“모르겠는데 <span class="nb">어떻게 써요…”</span><br><span class="hl">싶은 분들 오세요</span></h1>
 
-      <p class="lede">‘언젠가 배워야지’ 하고 <span class="nb">미루던 AI.</span><br>8월이 가기 전, <span class="ini">아</span>직 <span class="ini">모</span>르는 <span class="nb">세상을 여는 날.</span><br>그 세상의 첫 문을 <span class="nb">같이 열 탐험가를</span> 모집합니다.</p>
+      <p class="lede">‘언젠가 배워야지’ 하고 <span class="nb">미루던 AI.</span><br>8월이 가기 전, <span class="ini">아</span>직 <span class="ini">모</span>르는 <span class="nb">세상을 여는 DAY.</span><br><span class="nb">새로운 세상을 열</span> <span class="nb">탐험가를 모집합니다.</span></p>
 
 
       <div class="hero-cta">
@@ -964,7 +986,7 @@
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.5 10.5l4 4 9-9" stroke="#0270FE" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <div>
             <p class="t">3초 보고 신기해서 <span class="nb">공유만 열심히 하신 분</span></p>
-            <p class="s">비행기만 날리다 끝납니다. 오늘은 직접 만들어서 나가는 쪽으로 갑니다.</p>
+            <p class="s">비행기만 날리다 끝납니다. 원리를 익히고 앞으로 쓸 걸 직접 만드는 쪽으로 갑니다.</p>
           </div>
         </div>
       </div>
@@ -972,7 +994,21 @@
       <div class="stat-chart reveal" id="statChart"><p class="ch-title">AI를 써봤다 &nbsp;VS&nbsp; 업무에 제대로 쓴다</p><div class="ch"><div class="ch-grid"><i></i><i></i><i></i><i></i><i></i></div><div class="ch-bars"><div class="col"><b data-c="63.5">0%</b><i data-h="63.5"></i></div><div class="col on"><span class="tip">여기서 갈립니다</span><b data-c="17.1">0%</b><i data-h="17.1"></i></div></div></div><div class="ch-x"><span>AI를 써본<br>직장인</span><span class="on">업무에 제대로<br>쓰는 사람</span></div></div>
       <p class="stat-note reveal">직장인 열에 여섯이 AI를 써봤지만, 업무에 제대로 쓰는 사람은 열에 둘이 안 됩니다 <span class="cite">(한국은행, 2025)</span>. 그 사이 어딘가에 계시다면, 이 강의가 그 간격을 좁힙니다.</p>
 
-      <p class="notfor reveal"><strong>이미 클로드의 세계에 발을 디딘 분은 오지 않는 것이 좋습니다.</strong> 코딩을 배우러 오시는 분도 이 강의가 아깝습니다. <span class="nb">‘왕초보’ 탐험가 기준으로</span> 갑니다.</p>
+      <div class="warnbox reveal" role="note" aria-labelledby="warnTitle">
+        <svg class="warn-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M12 3.6 21.2 19.4H2.8Z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>
+          <path d="M12 9.4v4.3" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/>
+          <circle cx="12" cy="16.6" r="1.15" fill="currentColor"/>
+        </svg>
+        <div>
+          <p class="warn-t" id="warnTitle">잠깐, 이런 분은 <span class="nb">오지 않는 편이 좋습니다</span></p>
+          <ul class="warn-list">
+            <li>이미 <strong>클로드의 세계에 발을 디딘 분</strong></li>
+            <li><strong>코딩을 배우러</strong> 오시는 분</li>
+          </ul>
+          <p class="warn-s">두 경우 모두 이 강의가 아깝습니다. <span class="nb">‘왕초보’ 탐험가 기준으로</span> 갑니다.</p>
+        </div>
+      </div>
     </div>
   </section>
 
