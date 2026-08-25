@@ -496,6 +496,16 @@
     pointer-events: none;
   }
   .hero > .wrap { position: relative; z-index: 1; }
+  /* 문 일러스트 — 텍스트 칼럼과 겹치지 않는 폭이 확보되는 980px 이상에서만 띄운다 */
+  .hero-art { display: none; }
+  @media (min-width: 980px) {
+    .hero-art {
+      display: block; position: absolute; z-index: 0; pointer-events: none;
+      right: clamp(16px, 5%, 72px); top: 50%; transform: translateY(-50%);
+      width: clamp(230px, 27%, 330px);
+    }
+    .hero-art svg { display: block; width: 100%; height: auto; }
+  }
   .hero-mark { color: #FFFFFF; --mark-ai: #0270FE; }
   .hero .eyebrow { color: rgba(255,255,255,.92); }
   .toptag { background: var(--grad-green); color: var(--on-green); border-radius: 999px; padding: 7px 16px; }
@@ -936,6 +946,40 @@
 
   <!-- ===== HERO ===== -->
   <div class="hero">
+    <!-- 히어로 장식 — 세계관("아직 모르는 세상을 여는 문", 탐험가)의 문 모티프.
+         인라인 SVG라 외부 파일·라이선스가 없고 용량도 1KB 미만이다.
+         본문 텍스트 뒤가 아니라 우측 여백에만 놓이므로 좁은 화면에서는 숨긴다. -->
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="doorLight" x1="206" y1="0" x2="284" y2="0" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#2E86FF" stop-opacity=".28"/>
+            <stop offset="1" stop-color="#2E86FF" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <!-- 문 너머에서 새어나오는 빛 — 문짝 바깥에서 시작해야 문짝이 물들지 않는다 -->
+        <path d="M206 78 L288 40 L288 292 L206 240 Z" fill="url(#doorLight)"/>
+        <!-- 열린 문짝 면 -->
+        <path d="M150 96 L206 78 L206 240 L150 258 Z" fill="#2E86FF" fill-opacity=".07"/>
+        <!-- 문틀 -->
+        <g stroke="#0270FE" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M74 62 h76 a0 0 0 0 1 0 0 v196 h-76 Z"/>
+          <!-- 열린 문짝 -->
+          <path d="M150 96 L206 78 L206 240 L150 258 Z"/>
+          <!-- 손잡이 -->
+          <path d="M197 168 v15"/>
+          <!-- 바닥선 -->
+          <path d="M40 258 h60" stroke-opacity=".45"/>
+          <path d="M236 288 h44" stroke-opacity=".3"/>
+        </g>
+        <!-- 문 너머의 새로운 세상: 지평선과 별 -->
+        <g stroke="#2E86FF" stroke-width="2.6" stroke-linecap="round">
+          <path d="M232 118 v20 M222 128 h20" />
+          <path d="M266 172 v14 M259 179 h14" stroke-opacity=".7"/>
+          <path d="M246 226 v10 M241 231 h10" stroke-opacity=".5"/>
+        </g>
+      </svg>
+    </div>
     <div class="wrap">
 
       <div class="toprow">
