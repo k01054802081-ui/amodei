@@ -520,17 +520,18 @@
       animation: artDoor 2.2s cubic-bezier(.22, 1, .36, 1) .45s 1 both;
     }
     .art-glow { animation: artGlow 2.2s ease-out .45s 1 both; }
-    /* 노드만 계속 미세하게 뛴다 — 문은 멈춰도 안쪽은 살아 있게 */
-    .art-nodes { animation: artNodes 2.8s ease-in-out infinite; }
+    /* 두상 안 별만 아주 느리게 돈다 — 문이 멈춘 뒤에도 안쪽이 살아 있게.
+       transform-box:fill-box 가 있어야 별 자기 중심을 축으로 돈다. */
+    .art-burst { transform-box: fill-box; transform-origin: center; animation: artBurst 48s linear infinite; }
   }
   @keyframes artDoor  { from { transform: scaleX(1); } to { transform: scaleX(.16); } }
   @keyframes artGlow  { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes artNodes { 0%, 100% { opacity: .7; } 50% { opacity: 1; } }
+  @keyframes artBurst { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
   @media (prefers-reduced-motion: reduce) {
     /* 움직임을 끄면 문이 닫힌 채로 남아 빈 문틀만 보인다. 열린 상태로 고정한다. */
     .art-leaf { animation: none; transform: scaleX(.16); }
     .art-glow { animation: none; opacity: 1; }
-    .art-nodes { animation: none; }
+    .art-burst { animation: none; }
   }
   .hero-mark { color: #FFFFFF; --mark-ai: #0270FE; }
   .hero .eyebrow { color: rgba(255,255,255,.92); }
@@ -994,54 +995,47 @@
 
   <!-- ===== HERO ===== -->
   <div class="hero">
-    <!-- 히어로 장식 — 미지의 문이 열리는 애니메이션.
-         문짝을 경첩(왼쪽 문설주) 기준으로 scaleX 로 접어 열리는 것처럼 보이게 한다.
-         회전(rotateY)은 브라우저별로 SVG 3D 처리가 갈려 scaleX 로 갔다.
-         문 너머는 데이터 격자 + 신경망 노드 = AI 세상. 문틀 안쪽만 클립한다.
-         한 번만 열리고 그대로 유지된다(반복 없음). -->
+    <!-- 히어로 장식 — 미지의 문이 열리고, 그 너머에 AI가 심어진 두상이 드러난다.
+         문짝은 경첩(왼쪽 문설주) 기준 scaleX 로 접는다. rotateY 는 브라우저별
+         SVG 3D 처리가 갈려서 쓰지 않았다. 한 번만 열리고 그대로 유지된다.
+         두상은 각진 다각형이라 패스로 정확히 그릴 수 있다(곡선 프로필은 사람으로
+         읽히지 않아 포기했다). 문 너머 요소는 문틀 안쪽으로만 클립한다. -->
     <div class="hero-art" aria-hidden="true">
       <svg viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <clipPath id="artDoorway"><path d="M100 252 V116 A50 50 0 0 1 200 116 V252 Z"/></clipPath>
-          <linearGradient id="artBeyond" x1="150" y1="66" x2="150" y2="252" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="#0270FE" stop-opacity=".26"/>
+          <clipPath id="artDoorway"><path d="M92 252 V118 A58 58 0 0 1 208 118 V252 Z"/></clipPath>
+          <linearGradient id="artBeyond" x1="150" y1="60" x2="150" y2="252" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#0270FE" stop-opacity=".22"/>
             <stop offset="1" stop-color="#0270FE" stop-opacity=".05"/>
           </linearGradient>
-          <linearGradient id="artBeam" x1="150" y1="252" x2="150" y2="306" gradientUnits="userSpaceOnUse">
+          <linearGradient id="artBeam" x1="150" y1="252" x2="150" y2="308" gradientUnits="userSpaceOnUse">
             <stop offset="0" stop-color="#2E86FF" stop-opacity=".34"/>
             <stop offset="1" stop-color="#2E86FF" stop-opacity="0"/>
           </linearGradient>
+          <path id="artPetal" d="M0 0 Q-3.8 -15 0 -30 Q3.8 -15 0 0 Z"/>
         </defs>
         <g class="art-glow" clip-path="url(#artDoorway)">
-          <rect x="96" y="60" width="110" height="196" fill="url(#artBeyond)"/>
-          <!-- 데이터 격자 -->
-          <g stroke="#0270FE" stroke-width="1" stroke-opacity=".16">
-            <path d="M100 150 h100 M100 176 h100 M100 202 h100 M100 228 h100"/>
-            <path d="M122 116 v136 M150 116 v136 M178 116 v136"/>
-          </g>
-          <!-- 신경망 3층: 연결선 + 노드. 접힌 문짝이 왼쪽 16px 을 덮으므로
-               가장 왼쪽 층을 x=134 부터 둔다. -->
-          <g stroke="#0270FE" stroke-width="1.5" stroke-opacity=".5">
-            <path d="M134 162 L159 142 M134 162 L159 182 M134 204 L159 182 M134 204 L159 222"/>
-            <path d="M159 142 L184 168 M159 182 L184 168 M159 182 L184 208 M159 222 L184 208"/>
-          </g>
-          <g class="art-nodes" fill="#0270FE">
-            <circle cx="134" cy="162" r="4.6" fill-opacity=".85"/>
-            <circle cx="134" cy="204" r="4.6" fill-opacity=".85"/>
-            <circle cx="159" cy="142" r="5.4"/>
-            <circle cx="159" cy="182" r="5.4"/>
-            <circle cx="159" cy="222" r="5.4"/>
-            <circle cx="184" cy="168" r="4.6" fill-opacity=".85"/>
-            <circle cx="184" cy="208" r="4.6" fill-opacity=".85"/>
+          <rect x="88" y="56" width="126" height="200" fill="url(#artBeyond)"/>
+          <g transform="translate(114 124) scale(0.92)">
+            <path d="M20 18 L44 1 L79 8 L100 43 L93 77 L96 112 L75 131 L30 131 L30 104 L16 100 L17 92 L11 86 L15 78 L0 72 L17 60 L13 52 Z"
+                  fill="#0270FE" fill-opacity=".9"/>
+            <g class="art-burst" fill="#FFFFFF" transform="translate(52 56)">
+              <use href="#artPetal" transform="rotate(0)"/>   <use href="#artPetal" transform="rotate(30)"/>
+              <use href="#artPetal" transform="rotate(60)"/>  <use href="#artPetal" transform="rotate(90)"/>
+              <use href="#artPetal" transform="rotate(120)"/> <use href="#artPetal" transform="rotate(150)"/>
+              <use href="#artPetal" transform="rotate(180)"/> <use href="#artPetal" transform="rotate(210)"/>
+              <use href="#artPetal" transform="rotate(240)"/> <use href="#artPetal" transform="rotate(270)"/>
+              <use href="#artPetal" transform="rotate(300)"/> <use href="#artPetal" transform="rotate(330)"/>
+            </g>
           </g>
         </g>
-        <path class="art-glow" d="M100 252 H200 L268 306 H32 Z" fill="url(#artBeam)"/>
+        <path class="art-glow" d="M92 252 H208 L280 308 H20 Z" fill="url(#artBeam)"/>
         <g class="art-leaf">
-          <path d="M100 252 V116 A50 50 0 0 1 200 116 V252 Z" fill="#FFFFFF" stroke="#0270FE" stroke-width="3.2" stroke-linejoin="round"/>
-          <path d="M186 178 v14" stroke="#0270FE" stroke-width="3.2" stroke-linecap="round"/>
+          <path d="M92 252 V118 A58 58 0 0 1 208 118 V252 Z" fill="#FFFFFF" stroke="#0270FE" stroke-width="3.2" stroke-linejoin="round"/>
+          <path d="M193 180 v14" stroke="#0270FE" stroke-width="3.2" stroke-linecap="round"/>
         </g>
-        <path d="M100 252 V116 A50 50 0 0 1 200 116 V252" stroke="#0270FE" stroke-width="3.4" stroke-linejoin="round"/>
-        <path d="M44 252 h48 M208 252 h52" stroke="#0270FE" stroke-width="3" stroke-linecap="round" stroke-opacity=".4"/>
+        <path d="M92 252 V118 A58 58 0 0 1 208 118 V252" stroke="#0270FE" stroke-width="3.4" stroke-linejoin="round"/>
+        <path d="M36 252 h48 M216 252 h52" stroke="#0270FE" stroke-width="3" stroke-linecap="round" stroke-opacity=".4"/>
       </svg>
     </div>
     <div class="wrap">
