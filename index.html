@@ -474,7 +474,11 @@
   /* 히어로 = 그라데이션 카드 */
   .hero {
     background: var(--grad-blue); color: #FFFFFF; border-bottom: 0;
-    border-radius: 28px; margin: 20px auto 0; max-width: calc(var(--maxw) + 48px);
+    border-radius: 28px; margin: 20px auto 0;
+    /* 아래 패널들은 .wrap(max-width:var(--maxw), padding:0 24px) 안에 들어가므로
+       바깥 테두리가 var(--maxw) - 48px 이다. 히어로 카드도 같은 폭으로 맞춘다.
+       width 를 같이 주지 않으면 좁은 화면에서 카드만 양끝에 붙는다. */
+    max-width: calc(var(--maxw) - 48px); width: calc(100% - 48px);
     padding: 36px 0 32px; overflow: hidden; position: relative;
     box-shadow: 0 30px 70px -42px rgba(0,0,0,.55);
   }
@@ -947,7 +951,7 @@
            자리"로 간다. 지금 h1은 왕초보 본인의 말을 그대로 따온 형태. -->
       <h1>“모르겠는데 <span class="nb">어떻게 써요…”</span><br><span class="hl">싶은 분들 오세요</span></h1>
 
-      <p class="lede">‘언젠가 배워야지’ 하고 <span class="nb">미루던 AI.</span><br>8월이 가기 전, <span class="ini">아</span>직 <span class="ini">모</span>르는 <span class="nb">세상을 여는 DAY.</span><br><span class="nb">새로운 세상을 열</span> <span class="nb">탐험가를 모집합니다.</span></p>
+      <p class="lede">‘언젠가 배워야지’ 하고 <span class="nb">미루던 AI.</span><br>8월이 가기 전, <span class="ini">아</span>직 <span class="ini">모</span>르는 <span class="nb">세상을 여는 <span class="ini">DAY</span>.</span><br><span class="nb">새로운 세상을 열</span> <span class="nb">탐험가를 모집합니다.</span></p>
 
 
       <div class="hero-cta">
