@@ -249,6 +249,16 @@
   }
   .sp-name { font-size: 22px; font-weight: 800; letter-spacing: -.04em; }
   .sp-role { font-size: 17px; font-weight: 800; letter-spacing: -.03em; color: var(--green-ink); margin-top: 6px; line-height: 1.45; }
+  /* 강사 경력 — 한 줄로 붙이면 너무 길어 목록으로 쌓는다 */
+  .sp-creds { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 3px; }
+  .sp-creds li {
+    font-size: 16.5px; font-weight: 700; letter-spacing: -.03em; line-height: 1.45;
+    color: var(--green-ink); padding-left: 13px; position: relative;
+  }
+  .sp-creds li::before {
+    content: ""; position: absolute; left: 0; top: .62em;
+    width: 5px; height: 5px; border-radius: 50%; background: var(--blue-2);
+  }
   .sp-list { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 8px; }
   .sp-list li { font-size: 14.5px; color: var(--ink-mid); padding-left: 14px; position: relative; }
   .sp-list li::before {
@@ -1088,7 +1098,11 @@
           <div class="sp-photo">사진<br>자리</div>
           <div>
             <p class="sp-name">안훈민</p>
-            <p class="sp-role">AI 앱 서비스 CEO · <span class="nb">KAIST MBA 졸업</span></p>
+            <ul class="sp-creds">
+              <li>KAIST MBA 졸업</li>
+              <li><span class="nb">청년창업사관학교 11기</span> 졸업</li>
+              <li><span class="nb">헬스케어 AI 앱</span> 서비스 운영</li>
+            </ul>
           </div>
         </div>
         <p class="hc-quote">“여러분의 뇌를 열어드리겠습니다. 열린 뇌에 <span class="nb">AI의 원리를</span> 심어드리겠습니다.<br>이 강의를 자양분 삼아, <span class="nb">자신감 있게</span> <span class="nb">AI 툴을 거침없이</span> 쓸 수 있게 만들어 드리겠습니다.”</p>
