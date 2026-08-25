@@ -505,28 +505,32 @@
   .hero > .wrap { position: relative; z-index: 1; }
   /* 히어로 일러스트 — 텍스트 칼럼과 겹치지 않는 폭이 확보되는 980px 이상에서만 띄운다 */
   .hero-art { display: none; }
-  @media (min-width: 980px) {
+  @media (min-width: 1000px) {
     .hero-art {
       display: block; position: absolute; z-index: 0; pointer-events: none;
-      right: clamp(16px, 5%, 72px); top: 50%; transform: translateY(-50%);
-      width: clamp(230px, 27%, 330px);
+      right: clamp(12px, 4%, 64px); top: 50%; transform: translateY(-50%);
+      width: clamp(280px, 34%, 430px);
     }
     .hero-art svg { display: block; width: 100%; height: auto; overflow: visible; }
     /* 문짝은 왼쪽 문설주를 축으로 접힌다. transform-box:fill-box 가 없으면
-       transform-origin 이 SVG 뷰포트 기준이 되어 엉뚱한 축으로 돈다. */
-    .art-leaf { transform-box: fill-box; transform-origin: left center; animation: artDoor 8s ease-in-out infinite; }
-    .art-glow { animation: artGlow 8s ease-in-out infinite; }
-    .art-stars { animation: artStars 2.6s ease-in-out infinite; }
+       transform-origin 이 SVG 뷰포트 기준이 되어 엉뚱한 축으로 돈다.
+       닫힘 -> 열림 -> 유지. both 로 채워서 열린 상태에서 끝난다(반복 없음). */
+    .art-leaf {
+      transform-box: fill-box; transform-origin: left center;
+      animation: artDoor 2.2s cubic-bezier(.22, 1, .36, 1) .45s 1 both;
+    }
+    .art-glow { animation: artGlow 2.2s ease-out .45s 1 both; }
+    /* 노드만 계속 미세하게 뛴다 — 문은 멈춰도 안쪽은 살아 있게 */
+    .art-nodes { animation: artNodes 2.8s ease-in-out infinite; }
   }
-  /* 열림 -> 유지 -> 닫힘 -> 유지. 유지 구간을 길게 둬서 계속 팔락이지 않게 한다. */
-  @keyframes artDoor { 0%, 10% { transform: scaleX(1); } 35%, 68% { transform: scaleX(.18); } 90%, 100% { transform: scaleX(1); } }
-  @keyframes artGlow { 0%, 10% { opacity: 0; } 35%, 68% { opacity: 1; } 90%, 100% { opacity: 0; } }
-  @keyframes artStars { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+  @keyframes artDoor  { from { transform: scaleX(1); } to { transform: scaleX(.16); } }
+  @keyframes artGlow  { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes artNodes { 0%, 100% { opacity: .7; } 50% { opacity: 1; } }
   @media (prefers-reduced-motion: reduce) {
     /* 움직임을 끄면 문이 닫힌 채로 남아 빈 문틀만 보인다. 열린 상태로 고정한다. */
-    .art-leaf { animation: none; transform: scaleX(.18); }
+    .art-leaf { animation: none; transform: scaleX(.16); }
     .art-glow { animation: none; opacity: 1; }
-    .art-stars { animation: none; }
+    .art-nodes { animation: none; }
   }
   .hero-mark { color: #FFFFFF; --mark-ai: #0270FE; }
   .hero .eyebrow { color: rgba(255,255,255,.92); }
@@ -993,14 +997,15 @@
     <!-- 히어로 장식 — 미지의 문이 열리는 애니메이션.
          문짝을 경첩(왼쪽 문설주) 기준으로 scaleX 로 접어 열리는 것처럼 보이게 한다.
          회전(rotateY)은 브라우저별로 SVG 3D 처리가 갈려 scaleX 로 갔다.
-         문 너머 세계(빛·초승달·별)는 문틀 안쪽으로만 클립한다. -->
+         문 너머는 데이터 격자 + 신경망 노드 = AI 세상. 문틀 안쪽만 클립한다.
+         한 번만 열리고 그대로 유지된다(반복 없음). -->
     <div class="hero-art" aria-hidden="true">
       <svg viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <clipPath id="artDoorway"><path d="M100 252 V116 A50 50 0 0 1 200 116 V252 Z"/></clipPath>
           <linearGradient id="artBeyond" x1="150" y1="66" x2="150" y2="252" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="#0270FE" stop-opacity=".30"/>
-            <stop offset="1" stop-color="#0270FE" stop-opacity=".06"/>
+            <stop offset="0" stop-color="#0270FE" stop-opacity=".26"/>
+            <stop offset="1" stop-color="#0270FE" stop-opacity=".05"/>
           </linearGradient>
           <linearGradient id="artBeam" x1="150" y1="252" x2="150" y2="306" gradientUnits="userSpaceOnUse">
             <stop offset="0" stop-color="#2E86FF" stop-opacity=".34"/>
@@ -1009,11 +1014,25 @@
         </defs>
         <g class="art-glow" clip-path="url(#artDoorway)">
           <rect x="96" y="60" width="110" height="196" fill="url(#artBeyond)"/>
-          <path d="M176 122 A40 40 0 0 1 176 202 A190 190 0 0 0 176 122 Z" fill="#0270FE" fill-opacity=".5"/>
-          <g class="art-stars" stroke="#0270FE" stroke-width="2.4" stroke-linecap="round">
-            <path d="M140 152 v13 M133.5 158.5 h13"/>
-            <path d="M158 206 v11 M152.5 211.5 h11"/>
-            <path d="M136 228 v10 M131 233 h10"/>
+          <!-- 데이터 격자 -->
+          <g stroke="#0270FE" stroke-width="1" stroke-opacity=".16">
+            <path d="M100 150 h100 M100 176 h100 M100 202 h100 M100 228 h100"/>
+            <path d="M122 116 v136 M150 116 v136 M178 116 v136"/>
+          </g>
+          <!-- 신경망 3층: 연결선 + 노드. 접힌 문짝이 왼쪽 16px 을 덮으므로
+               가장 왼쪽 층을 x=134 부터 둔다. -->
+          <g stroke="#0270FE" stroke-width="1.5" stroke-opacity=".5">
+            <path d="M134 162 L159 142 M134 162 L159 182 M134 204 L159 182 M134 204 L159 222"/>
+            <path d="M159 142 L184 168 M159 182 L184 168 M159 182 L184 208 M159 222 L184 208"/>
+          </g>
+          <g class="art-nodes" fill="#0270FE">
+            <circle cx="134" cy="162" r="4.6" fill-opacity=".85"/>
+            <circle cx="134" cy="204" r="4.6" fill-opacity=".85"/>
+            <circle cx="159" cy="142" r="5.4"/>
+            <circle cx="159" cy="182" r="5.4"/>
+            <circle cx="159" cy="222" r="5.4"/>
+            <circle cx="184" cy="168" r="4.6" fill-opacity=".85"/>
+            <circle cx="184" cy="208" r="4.6" fill-opacity=".85"/>
           </g>
         </g>
         <path class="art-glow" d="M100 252 H200 L268 306 H32 Z" fill="url(#artBeam)"/>
