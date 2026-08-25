@@ -515,16 +515,16 @@
     /* 세 모티프를 서로 다른 주기로 움직여 반복이 눈에 띄지 않게 한다.
        transform-box:fill-box 가 없으면 SVG 그룹의 transform-origin 이
        뷰포트 기준이 되어 엉뚱한 곳을 축으로 돈다. */
-    .art-moon, .art-book, .art-spark { transform-box: fill-box; transform-origin: center; }
+    .art-moon, .art-stage, .art-spark { transform-box: fill-box; transform-origin: center; }
     .art-moon  { animation: artMoon 7.5s ease-in-out infinite; }
-    .art-book  { animation: artBook 6s ease-in-out infinite; }
+    .art-stage { animation: artStage 6s ease-in-out infinite; }
     .art-spark { animation: artSpark 3.4s ease-in-out infinite; }
   }
   @keyframes artMoon  { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-9px) rotate(-2.5deg); } }
-  @keyframes artBook  { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+  @keyframes artStage { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
   @keyframes artSpark { 0%, 100% { opacity: .5; transform: scale(.9) rotate(0deg); } 50% { opacity: 1; transform: scale(1.08) rotate(22deg); } }
   @media (prefers-reduced-motion: reduce) {
-    .art-moon, .art-book, .art-spark { animation: none; }
+    .art-moon, .art-stage, .art-spark { animation: none; }
   }
   .hero-mark { color: #FFFFFF; --mark-ai: #0270FE; }
   .hero .eyebrow { color: rgba(255,255,255,.92); }
@@ -988,23 +988,32 @@
 
   <!-- ===== HERO ===== -->
   <div class="hero">
-    <!-- 히어로 장식 — 받은 로고 시안의 구성(초승달 + 펼친 책 + 반짝임)을 참고했다.
-         시안의 인물 초상은 실존 인물(다리오 아모데이)이라 넣지 않고, 나머지
-         모티프만 브랜드 블루로 다시 그렸다. 인라인 SVG라 외부 파일이 없다. -->
+    <!-- 히어로 장식 — 받은 로고 시안의 구성(초승달 + 인물 + 펼친 책 + 반짝임)을
+         단순화해 다시 그렸다. 시안의 인물은 실존 인물(다리오 아모데이) 초상이라
+         쓰지 않고, 얼굴 없는 실루엣으로 대체했다. 인물+책은 한 그룹으로 묶어
+         같이 움직인다 — 따로 움직이면 인물이 책에서 떨어져 보인다. -->
     <div class="hero-art" aria-hidden="true">
       <svg viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g class="art-moon">
-          <path d="M178 70 A80 80 0 0 1 178 222 A420 420 0 0 0 178 70 Z" fill="#2E86FF" fill-opacity=".20"/>
-          <path d="M178 70 A80 80 0 0 1 178 222 A420 420 0 0 0 178 70 Z" fill="none" stroke="#0270FE" stroke-width="3.2"/>
+          <path d="M196 50 A88 88 0 0 1 196 226 A430 430 0 0 0 196 50 Z" fill="#2E86FF" fill-opacity=".20"/>
+          <path d="M196 50 A88 88 0 0 1 196 226 A430 430 0 0 0 196 50 Z" fill="none" stroke="#0270FE" stroke-width="3.2"/>
         </g>
-        <g class="art-book" stroke="#0270FE" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M158 268 Q114 244 66 252 L66 212 Q114 202 158 232 Z" fill="#FFFFFF"/>
-          <path d="M158 268 Q202 244 250 252 L250 212 Q202 202 158 232 Z" fill="#FFFFFF"/>
-          <path d="M158 232 v36"/>
+        <g class="art-stage">
+          <!-- 머리와 어깨를 겹쳐 하나로 잇는다. 도형마다 투명도를 주면 겹친
+               자리에 이음선이 보이므로 투명도는 그룹에 준다. -->
+          <g transform="rotate(-10 150 190)" opacity=".92">
+            <path d="M100 242 Q104 166 150 156 Q196 166 200 242 Z" fill="#0270FE"/>
+            <circle cx="150" cy="136" r="31" fill="#0270FE"/>
+          </g>
+          <g stroke="#0270FE" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M158 268 Q114 244 66 252 L66 212 Q114 202 158 232 Z" fill="#FFFFFF"/>
+            <path d="M158 268 Q202 244 250 252 L250 212 Q202 202 158 232 Z" fill="#FFFFFF"/>
+            <path d="M158 232 v36"/>
+          </g>
         </g>
         <g class="art-spark" stroke="#2E86FF" stroke-width="3" stroke-linecap="round">
-          <path d="M74 108 v-24 M74 132 v24 M62 120 h-24 M86 120 h24
-                   M65 111 l-16 -16 M83 129 l16 16 M83 111 l16 -16 M65 129 l-16 16"/>
+          <path d="M56 122 v-22 M56 144 v22 M45 133 h-22 M67 133 h22
+                   M48 125 l-15 -15 M64 141 l15 15 M64 125 l15 -15 M48 141 l-15 15"/>
         </g>
       </svg>
     </div>
