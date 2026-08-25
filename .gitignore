@@ -6,5 +6,9 @@
 *.webp
 *.heic
 
+# 단, 사이트가 실제로 서빙하는 자산은 커밋한다(og:image 등은 URL 이 필요하다)
+!assets/
+!assets/**
+
 # macOS
 .DS_Store
