@@ -512,19 +512,21 @@
       width: clamp(230px, 27%, 330px);
     }
     .hero-art svg { display: block; width: 100%; height: auto; overflow: visible; }
-    /* 세 모티프를 서로 다른 주기로 움직여 반복이 눈에 띄지 않게 한다.
-       transform-box:fill-box 가 없으면 SVG 그룹의 transform-origin 이
-       뷰포트 기준이 되어 엉뚱한 곳을 축으로 돈다. */
-    .art-moon, .art-stage, .art-spark { transform-box: fill-box; transform-origin: center; }
-    .art-moon  { animation: artMoon 7.5s ease-in-out infinite; }
-    .art-stage { animation: artStage 6s ease-in-out infinite; }
-    .art-spark { animation: artSpark 3.4s ease-in-out infinite; }
+    /* 문짝은 왼쪽 문설주를 축으로 접힌다. transform-box:fill-box 가 없으면
+       transform-origin 이 SVG 뷰포트 기준이 되어 엉뚱한 축으로 돈다. */
+    .art-leaf { transform-box: fill-box; transform-origin: left center; animation: artDoor 8s ease-in-out infinite; }
+    .art-glow { animation: artGlow 8s ease-in-out infinite; }
+    .art-stars { animation: artStars 2.6s ease-in-out infinite; }
   }
-  @keyframes artMoon  { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-9px) rotate(-2.5deg); } }
-  @keyframes artStage { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
-  @keyframes artSpark { 0%, 100% { opacity: .5; transform: scale(.9) rotate(0deg); } 50% { opacity: 1; transform: scale(1.08) rotate(22deg); } }
+  /* 열림 -> 유지 -> 닫힘 -> 유지. 유지 구간을 길게 둬서 계속 팔락이지 않게 한다. */
+  @keyframes artDoor { 0%, 10% { transform: scaleX(1); } 35%, 68% { transform: scaleX(.18); } 90%, 100% { transform: scaleX(1); } }
+  @keyframes artGlow { 0%, 10% { opacity: 0; } 35%, 68% { opacity: 1; } 90%, 100% { opacity: 0; } }
+  @keyframes artStars { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
   @media (prefers-reduced-motion: reduce) {
-    .art-moon, .art-stage, .art-spark { animation: none; }
+    /* 움직임을 끄면 문이 닫힌 채로 남아 빈 문틀만 보인다. 열린 상태로 고정한다. */
+    .art-leaf { animation: none; transform: scaleX(.18); }
+    .art-glow { animation: none; opacity: 1; }
+    .art-stars { animation: none; }
   }
   .hero-mark { color: #FFFFFF; --mark-ai: #0270FE; }
   .hero .eyebrow { color: rgba(255,255,255,.92); }
@@ -988,33 +990,39 @@
 
   <!-- ===== HERO ===== -->
   <div class="hero">
-    <!-- 히어로 장식 — 받은 로고 시안의 구성(초승달 + 인물 + 펼친 책 + 반짝임)을
-         단순화해 다시 그렸다. 시안의 인물은 실존 인물(다리오 아모데이) 초상이라
-         쓰지 않고, 얼굴 없는 실루엣으로 대체했다. 인물+책은 한 그룹으로 묶어
-         같이 움직인다 — 따로 움직이면 인물이 책에서 떨어져 보인다. -->
+    <!-- 히어로 장식 — 미지의 문이 열리는 애니메이션.
+         문짝을 경첩(왼쪽 문설주) 기준으로 scaleX 로 접어 열리는 것처럼 보이게 한다.
+         회전(rotateY)은 브라우저별로 SVG 3D 처리가 갈려 scaleX 로 갔다.
+         문 너머 세계(빛·초승달·별)는 문틀 안쪽으로만 클립한다. -->
     <div class="hero-art" aria-hidden="true">
       <svg viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g class="art-moon">
-          <path d="M196 50 A88 88 0 0 1 196 226 A430 430 0 0 0 196 50 Z" fill="#2E86FF" fill-opacity=".20"/>
-          <path d="M196 50 A88 88 0 0 1 196 226 A430 430 0 0 0 196 50 Z" fill="none" stroke="#0270FE" stroke-width="3.2"/>
-        </g>
-        <g class="art-stage">
-          <!-- 머리와 어깨를 겹쳐 하나로 잇는다. 도형마다 투명도를 주면 겹친
-               자리에 이음선이 보이므로 투명도는 그룹에 준다. -->
-          <g transform="rotate(-10 150 190)" opacity=".92">
-            <path d="M100 242 Q104 166 150 156 Q196 166 200 242 Z" fill="#0270FE"/>
-            <circle cx="150" cy="136" r="31" fill="#0270FE"/>
+        <defs>
+          <clipPath id="artDoorway"><path d="M100 252 V116 A50 50 0 0 1 200 116 V252 Z"/></clipPath>
+          <linearGradient id="artBeyond" x1="150" y1="66" x2="150" y2="252" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#0270FE" stop-opacity=".30"/>
+            <stop offset="1" stop-color="#0270FE" stop-opacity=".06"/>
+          </linearGradient>
+          <linearGradient id="artBeam" x1="150" y1="252" x2="150" y2="306" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#2E86FF" stop-opacity=".34"/>
+            <stop offset="1" stop-color="#2E86FF" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <g class="art-glow" clip-path="url(#artDoorway)">
+          <rect x="96" y="60" width="110" height="196" fill="url(#artBeyond)"/>
+          <path d="M176 122 A40 40 0 0 1 176 202 A190 190 0 0 0 176 122 Z" fill="#0270FE" fill-opacity=".5"/>
+          <g class="art-stars" stroke="#0270FE" stroke-width="2.4" stroke-linecap="round">
+            <path d="M140 152 v13 M133.5 158.5 h13"/>
+            <path d="M158 206 v11 M152.5 211.5 h11"/>
+            <path d="M136 228 v10 M131 233 h10"/>
           </g>
-          <g stroke="#0270FE" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M158 268 Q114 244 66 252 L66 212 Q114 202 158 232 Z" fill="#FFFFFF"/>
-            <path d="M158 268 Q202 244 250 252 L250 212 Q202 202 158 232 Z" fill="#FFFFFF"/>
-            <path d="M158 232 v36"/>
-          </g>
         </g>
-        <g class="art-spark" stroke="#2E86FF" stroke-width="3" stroke-linecap="round">
-          <path d="M56 122 v-22 M56 144 v22 M45 133 h-22 M67 133 h22
-                   M48 125 l-15 -15 M64 141 l15 15 M64 125 l15 -15 M48 141 l-15 15"/>
+        <path class="art-glow" d="M100 252 H200 L268 306 H32 Z" fill="url(#artBeam)"/>
+        <g class="art-leaf">
+          <path d="M100 252 V116 A50 50 0 0 1 200 116 V252 Z" fill="#FFFFFF" stroke="#0270FE" stroke-width="3.2" stroke-linejoin="round"/>
+          <path d="M186 178 v14" stroke="#0270FE" stroke-width="3.2" stroke-linecap="round"/>
         </g>
+        <path d="M100 252 V116 A50 50 0 0 1 200 116 V252" stroke="#0270FE" stroke-width="3.4" stroke-linejoin="round"/>
+        <path d="M44 252 h48 M208 252 h52" stroke="#0270FE" stroke-width="3" stroke-linecap="round" stroke-opacity=".4"/>
       </svg>
     </div>
     <div class="wrap">
