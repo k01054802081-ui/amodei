@@ -341,11 +341,16 @@
     .action { grid-template-columns: 130px 1fr 300px; gap: 36px; align-items: start; padding: 34px 0; }
   }
   .action-tag {
-    display: inline-block; align-self: start;
+    display: block; align-self: start;
+    /* 그리드 아이템이라 inline-block 이 block 으로 바뀌고 칼럼 폭만큼 늘어난다.
+       늘어난 상태에서 글자만 가운데로 모은다. */
+    justify-self: start; min-width: 96px; text-align: center;
     font-size: 14px; font-weight: 800; letter-spacing: .08em;
     color: var(--ink); background: var(--neon);
     padding: 6px 12px; border-radius: 2px;
   }
+  /* 데스크톱에서는 130px 칼럼을 그대로 채운다(기존 모양 유지) */
+  @media (min-width: 880px) { .action-tag { justify-self: stretch; } }
   .action h3 { font-size: 21px; }
   .action .desc { font-size: 15px; color: var(--ink-mid); margin-top: 8px; }
   .takeaway { font-size: 14px; color: var(--ink-mid); border-left: 2px solid var(--green); padding-left: 14px; }
@@ -1046,7 +1051,7 @@
       <div class="sec-head reveal">
         
         <h2><span class="nb">하루의 끝,</span> <span class="nb">손에 쥐고 나가는 것들</span></h2>
-        <p>강의의 절반 이상이 실습입니다. 아래 3가지는 강의가 끝난 뒤에도 본인 계정과 컴퓨터에 그대로 남습니다.</p>
+        <p>아래 3가지는 강의가 끝난 뒤에도 본인 계정과 컴퓨터에 그대로 남습니다.</p>
       </div>
 
       <div class="actions">
@@ -1061,8 +1066,8 @@
         <div class="action reveal">
           <span class="action-tag">결과물 2</span>
           <div>
-            <h3>손도 못 대던 일을 눈앞에서 끝내기</h3>
-            <p class="desc">미뤄두기만 하던 일을 하나 골라, 전·후 화면을 나란히 놓고 확인합니다. 결과가 눈으로 보이는 순간 감이 옵니다.</p>
+            <h3>파일 찾는데 <span class="nb">3분 이상 걸린다면?</span></h3>
+            <p class="desc">미뤄두기만 하던 뒤죽박죽 파일 정리. <span class="nb">AI로 안전하게</span> <span class="nb">폴더 정리하는 법</span>을 그 자리에서 해봅니다.</p>
           </div>
           <p class="takeaway"><strong>남는 것</strong>정리된 결과 + 다음에 또 쓸 문장</p>
         </div>
