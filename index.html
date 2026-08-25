@@ -384,6 +384,13 @@
     .flow.is-sched .step { grid-template-columns: 152px 1fr; gap: 24px; }
   }
   .step-time { font-size: 15px; font-weight: 800; color: var(--blue-ink); white-space: nowrap; }
+  /* 타임테이블에서 가장 중요한 행 표시 */
+  .step-main {
+    display: inline-block; margin-right: 6px; padding: 2px 8px;
+    /* #0166E8 — --blue-1(#0270FE)은 흰 글씨 대비 4.42:1로 AA 미달 */
+    border-radius: 999px; background: #0166E8; color: #FFFFFF;
+    font-size: 13px; font-weight: 800; letter-spacing: -.02em; vertical-align: 1px;
+  }
   .step-sub { display: block; margin-top: 4px; font-size: 14.5px; font-weight: 600; color: var(--ink-mid); }
   /* 휴식 행은 좌우 패딩(.flow의 28px)을 상쇄해 띠처럼 꽉 채운다 */
   .step.is-break { background: var(--paper); margin: 0 -28px; padding-left: 28px; padding-right: 28px; }
@@ -1247,8 +1254,8 @@
       <div class="flow is-sched">
         <div class="step reveal"><span class="step-time num">14:30 – 15:00</span><h3>입장 및 인사</h3></div>
         <div class="step reveal"><span class="step-time num">15:00 – 15:30</span><h3>아니, 그래서 <span class="nb">AI를 왜 써야 하는데?</span><span class="step-sub">‘기능’ 말고 <span class="nb">‘원리’요!</span></span></h3></div>
-        <div class="step is-break reveal"><span class="step-time num">15분</span><h3>휴식</h3></div>
-        <div class="step is-action reveal"><span class="step-time num">15:30 – 17:00</span><h3>실습 3가지 + 질의응답</h3></div>
+        <div class="step is-break reveal"><span class="step-time num">10분</span><h3>휴식</h3></div>
+        <div class="step is-action reveal"><span class="step-time num">15:40 – 17:00</span><h3><span class="step-main">메인!</span> 실습 3가지 + 질의응답</h3></div>
       </div>
     </div>
   </section>
@@ -1264,7 +1271,7 @@
       <div class="ncards">
         <div class="ncard reveal">
           <h3>보증금 30,000원</h3>
-          <p>신청만 해두고 안 오시면 <span class="nb">다른 분의 기회가</span> 사라지기 때문에 <span class="nb">보증금을 받습니다.</span><br>참석하시면 <strong>전액 그대로 돌려드립니다.</strong></p>
+          <p>신청만 해두고 안 오시면 다른 분의 기회가 사라지기 때문에 보증금을 받습니다. 참석하시면 <strong>전액 그대로 돌려드립니다.</strong></p>
         </div>
       </div>
 
