@@ -520,18 +520,17 @@
       animation: artDoor 2.2s cubic-bezier(.22, 1, .36, 1) .45s 1 both;
     }
     .art-glow { animation: artGlow 2.2s ease-out .45s 1 both; }
-    /* 두상 안 별만 아주 느리게 돈다 — 문이 멈춘 뒤에도 안쪽이 살아 있게.
-       transform-box:fill-box 가 있어야 별 자기 중심을 축으로 돈다. */
-    .art-burst { transform-box: fill-box; transform-origin: center; animation: artBurst 48s linear infinite; }
+    /* 노드만 미세하게 뛴다 — 문이 멈춘 뒤에도 안쪽이 살아 있게 */
+    .art-nodes { animation: artNodes 3.2s ease-in-out infinite; }
   }
   @keyframes artDoor  { from { transform: scaleX(1); } to { transform: scaleX(.16); } }
   @keyframes artGlow  { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes artBurst { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes artNodes { 0%, 100% { opacity: .78; } 50% { opacity: 1; } }
   @media (prefers-reduced-motion: reduce) {
     /* 움직임을 끄면 문이 닫힌 채로 남아 빈 문틀만 보인다. 열린 상태로 고정한다. */
     .art-leaf { animation: none; transform: scaleX(.16); }
     .art-glow { animation: none; opacity: 1; }
-    .art-burst { animation: none; }
+    .art-nodes { animation: none; }
   }
   .hero-mark { color: #FFFFFF; --mark-ai: #0270FE; }
   .hero .eyebrow { color: rgba(255,255,255,.92); }
@@ -995,38 +994,41 @@
 
   <!-- ===== HERO ===== -->
   <div class="hero">
-    <!-- 히어로 장식 — 미지의 문이 열리고, 그 너머에 AI가 심어진 두상이 드러난다.
+    <!-- 히어로 장식 — 미지의 문이 열리고, 그 너머에 뇌의 층(동심원 아치) 위로
+         노드가 뻗은 AI 세상이 드러난다.
          문짝은 경첩(왼쪽 문설주) 기준 scaleX 로 접는다. rotateY 는 브라우저별
          SVG 3D 처리가 갈려서 쓰지 않았다. 한 번만 열리고 그대로 유지된다.
-         두상은 각진 다각형이라 패스로 정확히 그릴 수 있다(곡선 프로필은 사람으로
-         읽히지 않아 포기했다). 문 너머 요소는 문틀 안쪽으로만 클립한다. -->
+         문 너머는 진한 파랑으로 깔아 흰 선이 살게 했다. 옅은 배경에 흰 선을
+         올리면 아무것도 안 보인다. 문틀 안쪽으로만 클립한다. -->
     <div class="hero-art" aria-hidden="true">
       <svg viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <clipPath id="artDoorway"><path d="M92 252 V118 A58 58 0 0 1 208 118 V252 Z"/></clipPath>
           <linearGradient id="artBeyond" x1="150" y1="60" x2="150" y2="252" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="#0270FE" stop-opacity=".22"/>
-            <stop offset="1" stop-color="#0270FE" stop-opacity=".05"/>
+            <stop offset="0" stop-color="#0B4FCF"/><stop offset="1" stop-color="#0270FE"/>
           </linearGradient>
           <linearGradient id="artBeam" x1="150" y1="252" x2="150" y2="308" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="#2E86FF" stop-opacity=".34"/>
-            <stop offset="1" stop-color="#2E86FF" stop-opacity="0"/>
+            <stop offset="0" stop-color="#2E86FF" stop-opacity=".4"/><stop offset="1" stop-color="#2E86FF" stop-opacity="0"/>
           </linearGradient>
-          <path id="artPetal" d="M0 0 Q-3.8 -15 0 -30 Q3.8 -15 0 0 Z"/>
         </defs>
         <g class="art-glow" clip-path="url(#artDoorway)">
           <rect x="88" y="56" width="126" height="200" fill="url(#artBeyond)"/>
-          <g transform="translate(114 124) scale(0.92)">
-            <path d="M20 18 L44 1 L79 8 L100 43 L93 77 L96 112 L75 131 L30 131 L30 104 L16 100 L17 92 L11 86 L15 78 L0 72 L17 60 L13 52 Z"
-                  fill="#0270FE" fill-opacity=".9"/>
-            <g class="art-burst" fill="#FFFFFF" transform="translate(52 56)">
-              <use href="#artPetal" transform="rotate(0)"/>   <use href="#artPetal" transform="rotate(30)"/>
-              <use href="#artPetal" transform="rotate(60)"/>  <use href="#artPetal" transform="rotate(90)"/>
-              <use href="#artPetal" transform="rotate(120)"/> <use href="#artPetal" transform="rotate(150)"/>
-              <use href="#artPetal" transform="rotate(180)"/> <use href="#artPetal" transform="rotate(210)"/>
-              <use href="#artPetal" transform="rotate(240)"/> <use href="#artPetal" transform="rotate(270)"/>
-              <use href="#artPetal" transform="rotate(300)"/> <use href="#artPetal" transform="rotate(330)"/>
-            </g>
+          <!-- 뇌의 층 — 동심원 아치와 흘러내리는 끝단 -->
+          <g stroke="#FFFFFF" stroke-width="2.8" stroke-opacity=".7" stroke-linecap="round">
+            <path d="M98 218 A52 52 0 0 1 202 218 M98 218 q-3 14 1 26 M202 218 q3 14 -1 26"/>
+            <path d="M110 218 A40 40 0 0 1 190 218 M110 218 q-3 12 1 24 M190 218 q3 12 -1 24"/>
+            <path d="M122 218 A28 28 0 0 1 178 218 M122 218 q-3 11 1 22 M178 218 q3 11 -1 22"/>
+            <path d="M134 218 A16 16 0 0 1 166 218 M134 218 q-3 9 1 18 M166 218 q3 9 -1 18"/>
+          </g>
+          <!-- 방사형 연결. 왼쪽 노드는 열린 문짝에 걸리므로 x=102 안쪽으로 두지 않는다 -->
+          <g stroke="#FFFFFF" stroke-width="3" stroke-linecap="round">
+            <path d="M150 198 L150 128 M150 198 L198 146 M150 198 L212 196
+                     M150 198 L192 240 M150 198 L108 156 M150 198 L102 202 M150 198 L120 242"/>
+          </g>
+          <g class="art-nodes" fill="#FFFFFF">
+            <circle cx="150" cy="128" r="6"/><circle cx="198" cy="146" r="6"/><circle cx="212" cy="196" r="6"/>
+            <circle cx="192" cy="240" r="6"/><circle cx="108" cy="156" r="6"/><circle cx="102" cy="202" r="6"/>
+            <circle cx="120" cy="242" r="6"/><circle cx="150" cy="198" r="8"/>
           </g>
         </g>
         <path class="art-glow" d="M92 252 H208 L280 308 H20 Z" fill="url(#artBeam)"/>
@@ -1053,7 +1055,7 @@
            자리"로 간다. 지금 h1은 왕초보 본인의 말을 그대로 따온 형태. -->
       <h1>“모르겠는데 <span class="nb">어떻게 써요…”</span><br><span class="hl">싶은 분들 오세요</span></h1>
 
-      <p class="lede">‘언젠가 배워야지’ 하고 <span class="nb">미루던 AI.</span><br>8월이 가기 전, <span class="ini">아</span>직 <span class="ini">모</span>르는 <span class="nb">세상을 여는 <span class="ini">DAY</span>.</span><br><span class="nb">새로운 세상을 열</span> <span class="nb">탐험가를 모집합니다.</span></p>
+      <p class="lede">‘언젠가 배워야지’ 하고 <span class="nb">미루던 AI.</span><br>8월이 가기 전, <span class="ini">아</span>직 <span class="ini">모</span>르는 <span class="nb">세상을 여는 <span class="ini">DAY</span></span><br><span class="nb">새로운 세상을 열</span> <span class="nb">탐험가를 모집합니다.</span></p>
 
 
       <div class="hero-cta">
@@ -1111,7 +1113,7 @@
         </div>
       </div>
 
-      <div class="stat-chart reveal" id="statChart"><p class="ch-title">AI를 써봤다 &nbsp;VS&nbsp; 업무에 제대로 쓴다</p><div class="ch"><div class="ch-grid"><i></i><i></i><i></i><i></i><i></i></div><div class="ch-bars"><div class="col"><b data-c="63.5">0%</b><i data-h="63.5"></i></div><div class="col on"><span class="tip">여기서 갈립니다</span><b data-c="17.1">0%</b><i data-h="17.1"></i></div></div></div><div class="ch-x"><span>AI를 써본<br>직장인</span><span class="on">업무에 제대로<br>쓰는 사람</span></div></div>
+      <div class="stat-chart reveal" id="statChart"><div class="ch"><div class="ch-grid"><i></i><i></i><i></i><i></i><i></i></div><div class="ch-bars"><div class="col"><b data-c="63.5">0%</b><i data-h="63.5"></i></div><div class="col on"><span class="tip">여기서 갈립니다</span><b data-c="17.1">0%</b><i data-h="17.1"></i></div></div></div><div class="ch-x"><span>AI를 써본<br>직장인</span><span class="on">업무에 제대로<br>쓰는 사람</span></div></div>
       <p class="stat-note reveal">직장인 열에 여섯이 AI를 써봤지만, 업무에 제대로 쓰는 사람은 열에 둘이 안 됩니다 <span class="cite">(한국은행, 2025)</span>. 그 사이 어딘가에 계시다면, 이 강의가 그 간격을 좁힙니다.</p>
 
       <div class="warnbox reveal" role="note" aria-labelledby="warnTitle">
@@ -1121,12 +1123,12 @@
           <circle cx="12" cy="16.6" r="1.15" fill="currentColor"/>
         </svg>
         <div>
-          <p class="warn-t" id="warnTitle">잠깐, 이런 분은 <span class="nb">오지 않는 편이 좋습니다</span></p>
+          <p class="warn-t" id="warnTitle">잠깐, 이런 분은 <span class="nb">추천하지 않습니다.</span></p>
           <ul class="warn-list">
             <li>이미 <strong>클로드의 세계에 발을 디딘 분</strong></li>
             <li><strong>코딩을 배우러</strong> 오시는 분</li>
           </ul>
-          <p class="warn-s">두 경우 모두 이 강의가 아깝습니다. 이번 강의는 <span class="nb">첫발을 내딛는</span> <span class="nb">‘왕초보’ 탐험가 기준으로</span> 갑니다!</p>
+          <p class="warn-s">이번 강의는 <span class="nb">첫발을 내딛는</span> <span class="nb">‘왕초보’ 탐험가 기준으로</span> 갑니다!</p>
         </div>
       </div>
     </div>
@@ -1136,8 +1138,8 @@
   <section id="principle">
     <div class="wrap">
       <div class="sec-head reveal">
-        <h2>툴을 외우지 않습니다. <span class="nb">원리를 가져갑니다</span></h2>
-        <p>새로운 세계에 발을 디딜 때 오는 두려움 — 이 하루는 그걸 해소하는 시간입니다. 강의가 끝나면 자신감 있게 AI 툴을 거침없이 쓰실 수 있게 만들어 드립니다.</p>
+        <h2>툴을 외우지 않습니다<br><span class="nb"><span class="ini">원리</span>를 가져갑니다</span></h2>
+        <p>새로운 세계에 발을 디딜 때 오는 두려움 — 이 하루는 그걸 해소하는 시간입니다.</p>
       </div>
 
       <div class="ncards">
@@ -1256,8 +1258,8 @@
             <p class="sp-name">안훈민</p>
             <ul class="sp-creds">
               <li>KAIST MBA 졸업</li>
-              <li><span class="nb">투자 · 정부 R&amp;D · 각종 지원사업</span> <span class="nb">선정 및 컨설팅</span></li>
               <li><span class="nb">헬스케어 AI 앱</span> 서비스 운영</li>
+              <li><span class="nb">투자 · 정부 R&amp;D · 각종 지원사업</span> <span class="nb">선정 및 컨설팅</span></li>
             </ul>
           </div>
         </div>
@@ -1266,7 +1268,7 @@
 
       <div class="ctaband reveal">
         <div>
-          <p class="cb-t"><span class="nb">진행 1명 + 보조 강사 2명이</span> <span class="nb">자리를 돌며</span> <span class="nb">막힌 화면을 직접 봐드립니다</span></p>
+          <p class="cb-t"><span class="nb">실무자가</span> <span class="nb">막힌 화면을 직접 봐드립니다</span></p>
           <p class="cb-s">정원이 정해져 있어 선착순으로 마감됩니다</p>
         </div>
         <a class="btn btn-primary btn-lg" href="https://docs.google.com/forms/d/e/1FAIpQLSdzkY6JZZ1_Hhe5v8iOHN2iyG7j-8BMHZlVDA02ErnwOTLfTg/viewform" target="_blank" rel="noopener" data-openchat>선착순 무료 강의 신청하기</a>
@@ -1286,8 +1288,8 @@
 
       <div class="flow is-sched">
         <div class="step reveal"><span class="step-time num">14:30 – 15:00</span><h3>입장 및 인사</h3></div>
-        <div class="step reveal"><span class="step-time num">15:00 – 15:30</span><h3>아니, 그래서 <span class="nb">AI를 왜 써야 하는데?</span><span class="step-sub">‘기능’ 말고 <span class="nb">‘원리’요!</span></span></h3></div>
-        <div class="step is-break reveal"><span class="step-time num">10분</span><h3>휴식</h3></div>
+        <div class="step reveal"><span class="step-time num">15:00 – 15:30</span><h3>아니, 그래서 <span class="nb">AI를 왜 써야 하는데?</span></h3></div>
+        <div class="step is-break reveal"><span class="step-time num">10분</span><h3>휴식 및 PC 세팅</h3></div>
         <div class="step is-action reveal"><span class="step-time num">15:40 – 17:00</span><h3><span class="step-main">메인!</span> 실습 3가지 + 질의응답</h3></div>
       </div>
     </div>
@@ -1310,7 +1312,7 @@
 
       <div class="team-cta reveal">
         <div>
-          <b>팀/회사 단위로 듣고 싶으신가요?</b>
+          <b>개인/팀/회사 단위로 듣고 싶으신가요?</b>
           <p>인원·일정에 맞춘 진행이 가능합니다.</p>
         </div>
         <a class="btn btn-ghost" href="https://open.kakao.com/o/ss7GAvKi" target="_blank" rel="noopener noreferrer" data-openchat>단체 신청 문의</a>
@@ -1326,11 +1328,11 @@
         <h2>미리 답해두는 질문들</h2>
       </div>
       <div class="faq reveal">
-        <details><summary>보증금 3만원은 어떤 돈인가요?</summary><p>강의료는 0원입니다. 보증금은 자리를 지키기 위한 예약금이고, 참석하시면 당일 전액 돌려드립니다. 정원이 6명이라 한 자리가 비면 정말 오고 싶었던 분이 못 오시게 되어 최소한의 장치만 두었습니다.</p></details>
+        <details><summary>보증금 3만원은 어떤 돈인가요?</summary><p>자리를 지키기 위한 예약금이고, 참석하시면 당일 전액 돌려드립니다.<br>정원이 6명이라 한 자리가 비면 정말 오고 싶었던 분이 못 오시게 되어 최소한의 장치를 두었습니다.</p></details>
         <details><summary>보증금은 언제 돌려받나요?</summary><p>강의가 끝나는 당일 바로 보내드립니다. 참석만 하시면 30,000원 전액 환불이고, 별도로 신청하실 것은 없습니다.</p></details>
-        <details><summary>컴퓨터를 잘 다루지 못해도 따라갈 수 있나요?</summary><p>따라오실 수 있습니다. 그날 입력하는 것은 한국어 문장뿐이고, 명령어나 단축키를 외울 일은 없습니다. 진행 1명과 보조 강사 2명이 자리를 돌기 때문에 막히면 그 자리에서 화면을 함께 봅니다.</p></details>
+        <details><summary>컴퓨터를 잘 다루지 못해도 따라갈 수 있나요?</summary><p>따라오실 수 있습니다. 그날 입력하는 것은 한국어 문장뿐이고, 명령어나 단축키를 외울 일은 없습니다.</p></details>
         <details><summary>무엇을 준비해 가면 되나요?</summary><p>노트북과 휴대폰만 챙겨 오시면 됩니다. 계정 만들기는 시작 직후에 다 같이 진행하니 미리 하지 않으셔도 됩니다.</p></details>
-        <details><summary>장소는 어디인가요?</summary><p>서울 용산구 원효로 부근 오피스입니다. 6호선·경의중앙선 <b class="stn">효창공원앞역</b>과 1호선·경의중앙선 <b class="stn">용산역</b> 근처입니다.(도보 10~15분) 정확한 건물과 층, 오시는 길은 신청해주신 분께 개별로 안내드립니다.</p></details>
+        <details><summary>장소는 어디인가요?</summary><p>서울 용산구 원효로 부근 오피스입니다. 6호선·경의중앙선 <b class="stn">효창공원앞역</b>과 1호선·경의중앙선 <b class="stn">용산역</b> 근처입니다.(도보 10~15분)<br>정확한 건물과 층, 오시는 길은 신청해주신 분께 개별로 안내드립니다.</p></details>
       </div>
     </div>
   </section>
@@ -1340,7 +1342,7 @@
     <div class="wrap">
       <div class="apply-box reveal">
         
-        <h2>8월 29일 토요일 <span class="nb">오후 3시</span>, <span class="nb">6명 중 한 자리</span></h2>
+        <h2>8월 29일 토요일 <span class="nb">오후 3시</span></h2>
         <p><span class="nb">강의료 0원.</span> <span class="nb">보증금 30,000원은</span> <span class="nb">참석하시면 당일 전액 돌려드립니다.</span> <span class="nb">신청은 아래 버튼을 눌러</span> <span class="nb">1분이면 끝납니다.</span></p>
 
         <div class="steps3">
